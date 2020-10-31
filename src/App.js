@@ -8,7 +8,20 @@ function App() {
   const [repositories, setRepositories] = useState([]);
 
   async function handleAddRepository() {
-    // TODO
+    try {
+      const response = await api.post('/repositories', {
+        title: `New repository ${Date.now()}`,
+        url: 'https://github.com/vitormarco',
+        techs: []
+      })
+
+      const { data } = response;
+
+      setRepositories([...repositories, data]);
+
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   async function handleRemoveRepository(id) {
