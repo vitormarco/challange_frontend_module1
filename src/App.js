@@ -6,7 +6,6 @@ import "./styles.css";
 
 function App() {
   const [repositories, setRepositories] = useState([]);
-  const [repositoriesText, setRepositoriesText] = useState('Carregando repositórios...')
 
   async function handleAddRepository() {
     // TODO
@@ -23,10 +22,6 @@ function App() {
           const newRepositories = [...repositories];
           newRepositories.splice(index, 1);
           setRepositories(newRepositories);
-
-          if (newRepositories.length === 0) {
-            setRepositoriesText('Nenhum repositório encontrado');
-          }
         }
       }
 
@@ -41,13 +36,8 @@ function App() {
       const { data } = getRepositories;
 
       setRepositories(data);
-
-      if (data.length === 0) {
-        setRepositoriesText('Nenhum repositório encontrado');
-      }
-
     } catch (error) {
-      setRepositoriesText('Tivemos um problema ao carregar os repositórios');
+      console.log(error);
     }
   }, []);
 
@@ -55,20 +45,17 @@ function App() {
     listAllRepositories();
   }, [listAllRepositories]);
 
-  const listRepositories = repositories.length > 0 ? (
-    repositories.map(repo => (
-      <li key={repo.id}>
-        { repo.title }
-        <button onClick={() => handleRemoveRepository(repo.id)}>
-          Remover
-        </button>
-      </li>
-    ))) : <li>{ repositoriesText }</li>; 
-
   return (
     <div>
       <ul data-testid="repository-list">
-        { listRepositories }
+        { repositories.map(repo => (
+          <li key={repo.id}>
+            { repo.title }
+            <button onClick={() => handleRemoveRepository(repo.id)}>
+              Remover
+            </button>
+          </li>))
+        }
       </ul>
 
       <button onClick={handleAddRepository}>Adicionar</button>
