@@ -13,8 +13,26 @@ function App() {
   }
 
   async function handleRemoveRepository(id) {
-    // TODO
-    console.log(id)
+    try {
+      const response = await api.delete(`/repositories/${id}`);
+
+      if (response.status === 204) {
+        const index = repositories.findIndex(repo => repo.id = id);
+
+        if (index !== -1) {
+          const newRepositories = [...repositories];
+          newRepositories.splice(index, 1);
+          setRepositories(newRepositories);
+
+          if (newRepositories.length === 0) {
+            setRepositoriesText('Nenhum repositório encontrado');
+          }
+        }
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const listAllRepositories = useCallback(async () => {
@@ -24,7 +42,7 @@ function App() {
 
       setRepositories(data);
 
-      if (!data) {
+      if (data.length === 0) {
         setRepositoriesText('Nenhum repositório encontrado');
       }
 
